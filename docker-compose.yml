@@ -1,7 +1,26 @@
 volumes:
   etc_wireguard:
+  caddy_data:
+  caddy_config:
 
 services:
+  caddy:
+    image: caddy:2.7-alpine
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - wg
+    depends_on:
+      - wg-easy
+
   wg-easy:
     #environment:
     #  Optional:
@@ -20,7 +39,8 @@ services:
       - /lib/modules:/lib/modules:ro
     ports:
       - "51820:51820/udp"
-      - "51821:51821/tcp"
+      # HTTPポートは内部通信のみに使用（Caddyからのプロキシ）
+      # - "51821:51821/tcp"  # この行をコメントアウト
     restart: unless-stopped
     cap_add:
       - NET_ADMIN

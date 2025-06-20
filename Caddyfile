@@ -1,0 +1,9 @@
+{
+    # Let's Encryptから証明書を取得するためのメールアドレス
+    email q-github@questar.ac
+}
+
+vpn.cloud-sign.com {
+    # wg-easyコンテナへのリバースプロキシ
+    reverse_proxy wg-easy:51821
+} 
